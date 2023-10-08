@@ -1,29 +1,14 @@
 import type { CAC } from "cac";
 import {
   ACTIVATION,
-  CodeGeniusOptions,
   execCommand,
-  gitUserOptions,
   loggerInfo,
   printError,
   printInfo,
   printWarring,
 } from "code-genius";
 
-const mergeConfig = async (config: CodeGeniusOptions) => {
-  const commands = config && config?.commands;
-  if (commands && commands.gituser) {
-    const { ruleName, ruleEmail } = commands.gituser;
-    return {
-      ruleName: ruleName || gitUserOptions.ruleName,
-      ruleEmail: ruleEmail || gitUserOptions.ruleEmail,
-    };
-  }
-  return {
-    ruleName: gitUserOptions.ruleName,
-    ruleEmail: gitUserOptions.ruleEmail,
-  };
-};
+import { GitUserOptions } from "./common";
 
 async function setGitUserName(name: string, ruleName: string) {
   if (ACTIVATION) {
@@ -103,7 +88,8 @@ async function checkGitUserEmail(ruleEmail: string) {
   }
 }
 
-const gitUserInstaller = (config: CodeGeniusOptions) => {
+const gitUserInstaller = (config: GitUserOptions) => {
+  const { ruleEmail, ruleName } = config;
   return {
     name: "gitUserInstaller",
     setup: (cli: CAC) => {
@@ -116,7 +102,6 @@ const gitUserInstaller = (config: CodeGeniusOptions) => {
         .option("--rule-name <regexp>", "设置 user.name 匹配规则(转义字符串)")
         .option("--rule-email <regexp>", "设置 user.email 匹配规则(转义字符串)")
         .action(async (options) => {
-          const { ruleName, ruleEmail } = await mergeConfig(config);
           const { name, email, ruleName: rName, ruleEmail: rEmail } = options;
           if (!name && !email) {
             await checkGitUserName(ruleName || rName);
