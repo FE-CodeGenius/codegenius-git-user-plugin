@@ -4,6 +4,27 @@
 
 使用场景: 用于校验那些不应该出现的邮箱地址会名称出现在 `git` 提交记录中, 常见的使用公司内部邮箱提交 `github` 的开源项目, 这通常是不允许的.
 
+## 安装
+
+```bash
+npm i @codegenius/git-user-plugin -D
+```
+
+```javascript
+import { defineConfig } from "code-genius";
+import { gitUserInstaller } from "@codegenius/git-user-plugin";
+
+export default defineConfig({
+  plugins: [
+    gitUserInstaller({
+      ruleEmail: "^[a-zA-Z0-9._%+-]+@(gmail)\\.(com)$",
+    }),
+  ],
+});
+```
+
+## 使用
+
 ### 命令模式
 
 ```bash
@@ -35,7 +56,7 @@ codeg gituser --rule-email '^[a-zA-Z0-9._%+-]+@(qq)\.(com)$'
 ### API 模式
 
 ```typescript
-import { setGitUserName, setGitUserEmail, checkGitUserInfo } from "code-genius";
+import { setGitUserName, setGitUserEmail, checkGitUserInfo } from "@codegenius/git-user-plugin";
 
 (async () => {
   await setGitUserName("OSpoon", "[\\s\\S]*");
@@ -45,19 +66,4 @@ import { setGitUserName, setGitUserEmail, checkGitUserInfo } from "code-genius";
   );
   await checkGitUserInfo("[\\s\\S]*", "^[a-zA-Z0-9._%+-]+@(gmail)\\.(com)$");
 })();
-```
-
-### 配置文件
-
-```typescript
-# 覆盖默认的 `gituser` 配置
-import { defineConfig } from "code-genius";
-
-export default defineConfig({
-  commands: {
-    gituser: {
-      ruleEmail: "^[a-zA-Z0-9._%+-]+@(gmail)\\.(com)$",
-    },
-  },
-});
 ```
