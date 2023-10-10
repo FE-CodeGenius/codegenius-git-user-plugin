@@ -91,7 +91,9 @@ async function checkGitUserEmail(ruleEmail: string) {
 const gitUserInstaller = (config: GitUserOptions) => {
   const { ruleEmail, ruleName } = config;
   return {
-    name: "gitUserInstaller",
+    name: "gituser",
+    describe: "设置或校验 git user 信息是否规范",
+    command: "gituser",
     setup: (cli: CAC) => {
       cli
         .command("gituser", "设置或校验 git user 信息是否规范")
